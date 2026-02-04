@@ -14,7 +14,6 @@ import torch
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi import Request
-import os
 
 
 # Setup logging
@@ -32,11 +31,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount(
-    "/",
-    StaticFiles(directory="frontend", html=True),
-    name="frontend"
-)
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
 
 
 # Load YOLO model with optimizations
@@ -87,8 +82,14 @@ def get_class_color(class_name: str):
     """Get bright color for better visibility"""
     return CLASS_COLORS.get(class_name.lower(), (255, 255, 255))
 
+@app.get("/", response_class=HTMLResponse)
+async def serve_ui():
+    with open("frontend/index.html", "r", encoding="utf-8") as f:
+        return f.read()
+
+
 @app.get("/health")
-async def root():
+async def health():
     return {
         "status": "online",
         "model": MODEL_PATH,
