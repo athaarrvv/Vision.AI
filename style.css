@@ -1,0 +1,618 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #000000;
+  color: #e0e0ff;
+  font-family: 'Roboto Mono', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(120, 0, 255, 0.08) 0%, transparent 25%),
+    radial-gradient(circle at 90% 80%, rgba(255, 0, 200, 0.06) 0%, transparent 30%);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background: rgba(10, 10, 20, 0.7);
+  border-bottom: 1px solid rgba(100, 0, 255, 0.15);
+  backdrop-filter: blur(8px);
+}
+
+.logo {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  background: linear-gradient(90deg, #ff00cc, #00ffff, #9933ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 20px rgba(180, 0, 255, 0.8);
+}
+
+.lightning {
+  font-size: 32px;
+  margin-right: 8px;
+  animation: pulse 2s infinite alternate;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.system {
+  color: #00ff88;
+  text-shadow: 0 0 10px #00ff88;
+}
+
+.dot {
+  color: #00ff88;
+  animation: blink 1.2s infinite;
+}
+
+.latency {
+  color: #00ccff;
+}
+
+.main-title h1 {
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 72px;
+  font-weight: 900;
+  letter-spacing: 8px;
+  margin: 30px 0 10px;
+  background: linear-gradient(90deg, #ff00cc, #00ffff, #ff00cc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 40px rgba(255, 0, 200, 0.6), 0 0 80px rgba(0, 255, 255, 0.4);
+  animation: neon-glow 3s ease-in-out infinite alternate;
+}
+
+.subtitle {
+  text-align: center;
+  color: #a0a0ff;
+  font-size: 18px;
+  margin-bottom: 30px;
+  line-height: 1.5;
+}
+
+.subtitle p {
+  margin: 6px 0;
+}
+
+.controls {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.neon-btn {
+  background: transparent;
+  border: 2px solid #00ffff;
+  color: #00ffff;
+  padding: 12px 28px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-shadow: 0 0 10px #00ffff;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+.neon-btn:hover {
+  background: rgba(0, 255, 255, 0.15);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+  transform: translateY(-2px);
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 320px;
+  gap: 30px;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 0 40px 40px;
+}
+
+.panel {
+  background: rgba(15, 15, 35, 0.6);
+  border: 1px solid rgba(100, 0, 255, 0.25);
+  border-radius: 12px;
+  padding: 20px;
+  backdrop-filter: blur(6px);
+}
+
+.panel h2 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 24px;
+  color: #00ffff;
+  margin-bottom: 15px;
+  text-shadow: 0 0 15px #00ffff;
+}
+
+.image-container {
+  position: relative;
+  background: #0a0a0a;
+  border: 1px solid rgba(0, 255, 255, 0.2);
+  border-radius: 8px;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#originalImg, #analyzedCanvas {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.label {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #00ffff;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid #00ffff33;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.recent-scans {
+  background: rgba(15, 15, 35, 0.6);
+  border: 1px solid rgba(255, 0, 200, 0.25);
+  border-radius: 12px;
+  padding: 20px;
+  flex: 1;
+}
+
+.recent-scans h3 {
+  font-family: 'Orbitron', sans-serif;
+  color: #ff00cc;
+  margin-bottom: 15px;
+  text-shadow: 0 0 12px #ff00cc;
+}
+
+#recentList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recent-item {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid rgba(100, 0, 255, 0.3);
+}
+
+.recent-item img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+}
+
+.recent-label {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(0,0,0,0.75);
+  color: #00ff88;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.upload-section {
+  text-align: center;
+  margin: 40px 0;
+}
+
+.upload-label {
+  font-size: 20px;
+  padding: 18px 60px;
+  cursor: pointer;
+}
+
+.summary {
+  max-width: 1600px;
+  margin: 0 auto 60px;
+  padding: 0 40px;
+}
+
+.summary h2 {
+  font-family: 'Orbitron', sans-serif;
+  color: #ff00cc;
+  font-size: 32px;
+  margin-bottom: 20px;
+  text-align: center;
+  text-shadow: 0 0 20px #ff00cc88;
+}
+
+#summaryTags {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  background: rgba(20, 20, 50, 0.8);
+  border: 2px solid;
+  border-radius: 50px;
+  padding: 12px 28px;
+  font-size: 18px;
+  font-weight: 700;
+  text-shadow: 0 0 10px currentColor;
+  box-shadow: 0 0 20px currentColor;
+  min-width: 140px;
+  text-align: center;
+}
+
+/* Example tag colors - adjust classes in JS */
+.tag-autos     { border-color: #00ffff; color: #00ffff; }
+.tag-number    { border-color: #ff00cc; color: #ff00cc; }
+.tag-bus       { border-color: #ffff00; color: #ffff00; }
+.tag-twowheeler{ border-color: #00ff88; color: #00ff88; }
+
+/* Glow animation */
+@keyframes neon-glow {
+  from { text-shadow: 0 0 20px #ff00cc88, 0 0 40px #00ffff66; }
+  to   { text-shadow: 0 0 40px #ff00ccff, 0 0 80px #00ffffff; }
+}
+
+@keyframes pulse {
+  from { opacity: 0.7; }
+  to   { opacity: 1; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 1200px) {
+  .content-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .sidebar {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-grid {
+    grid-template-columns: 1fr;
+  }
+  .main-title h1 {
+    font-size: 48px;
+  }
+}
+
+
+/* Modal styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.92);
+  backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  position: relative;
+  margin: 5% auto;
+  padding: 20px;
+  width: 90%;
+  max-width: 1200px;
+  background: rgba(15, 15, 35, 0.85);
+  border: 2px solid #00ffff44;
+  border-radius: 16px;
+  box-shadow: 0 0 60px rgba(0, 255, 255, 0.4);
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 25px;
+  color: #00ffff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+  text-shadow: 0 0 10px #00ffff;
+}
+
+.close:hover {
+  color: #ff00cc;
+}
+
+.modal-title {
+  font-family: 'Orbitron', sans-serif;
+  color: #00ffff;
+  text-align: center;
+  margin-bottom: 20px;
+  text-shadow: 0 0 20px #00ffff;
+}
+
+.modal-image-container {
+  position: relative;
+  max-height: 80vh;
+  overflow: auto;
+  border: 1px solid #00ffff33;
+  border-radius: 12px;
+  background: #000;
+}
+
+#modalCanvas {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Better neon boxes - override canvas drawing styles if needed */
+canvas {
+  image-rendering: pixelated; /* optional for sharp edges */
+}
+
+
+#analyzedCanvas {
+  transition: opacity 0.6s ease-in-out;   /* already added in JS, but safe to have here too */
+}
+
+
+/* Add to style.css */
+
+/* Animation classes for button */
+.neon-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.neon-btn:disabled:hover {
+  background: transparent;
+  transform: none;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+/* Smooth transitions for canvas */
+#analyzedCanvas {
+  transition: none; /* Remove previous fade transition */
+  image-rendering: pixelated;
+}
+
+/* Smooth animations */
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  70% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes popOut {
+  0% { transform: scale(1); opacity: 1; }
+  30% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(0); opacity: 0; }
+}
+
+
+/* Confidence Slider Styles */
+.confidence-slider {
+  max-width: 800px;
+  margin: 20px auto 40px;
+  padding: 20px 40px;
+  background: rgba(15, 15, 35, 0.6);
+  border: 1px solid rgba(100, 0, 255, 0.25);
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+}
+
+.slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.slider-title {
+  font-family: 'Orbitron', sans-serif;
+  color: #00ffff;
+  font-size: 18px;
+  text-shadow: 0 0 10px #00ffff;
+}
+
+.slider-value {
+  font-family: 'Orbitron', sans-serif;
+  color: #ff00cc;
+  font-size: 22px;
+  font-weight: 700;
+  text-shadow: 0 0 15px #ff00cc;
+}
+
+.slider-container {
+  position: relative;
+  padding: 10px 0 30px;
+}
+
+.slider {
+  width: 100%;
+  height: 8px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: linear-gradient(90deg, #ff0000, #ffff00, #00ff00);
+  border-radius: 4px;
+  outline: none;
+  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #00ffff;
+  cursor: pointer;
+  border: 2px solid #000;
+  box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
+}
+
+.slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #00ffff;
+  cursor: pointer;
+  border: 2px solid #000;
+  box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
+}
+
+.slider-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5px;
+  font-size: 12px;
+  color: #a0a0ff;
+}
+
+.slider-labels span {
+  font-family: 'Roboto Mono', monospace;
+}
+
+/* Add opacity to tag styles */
+.tag {
+  background: rgba(20, 20, 50, 0.8);
+  border: 2px solid;
+  border-radius: 50px;
+  padding: 12px 28px;
+  font-size: 18px;
+  font-weight: 700;
+  text-shadow: 0 0 10px currentColor;
+  box-shadow: 0 0 20px currentColor;
+  min-width: 140px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+/* Opacity effects for low confidence boxes */
+.low-confidence {
+  opacity: 0.4;
+}
+
+.medium-confidence {
+  opacity: 0.7;
+}
+
+.high-confidence {
+  opacity: 1;
+}
+
+
+/* Mode Selector Styles - Add this to your style.css */
+.mode-selector {
+  max-width: 800px;
+  margin: 20px auto 40px;
+  padding: 20px 40px;
+  background: rgba(15, 15, 35, 0.6);
+  border: 1px solid rgba(255, 0, 200, 0.25);
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+}
+
+.mode-title {
+  font-family: 'Orbitron', sans-serif;
+  color: #ff00cc;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 15px;
+  text-shadow: 0 0 10px #ff00cc;
+}
+
+.mode-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+}
+
+.mode-btn {
+  background: transparent;
+  border: 2px solid #00ffff;
+  color: #00ffff;
+  padding: 12px 24px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.3s;
+  text-shadow: 0 0 10px #00ffff;
+  flex: 1;
+  text-align: center;
+  min-width: 120px;
+}
+
+.mode-btn.active {
+  background: rgba(0, 255, 255, 0.2);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+  border-color: #ff00cc;
+  color: #ff00cc;
+  text-shadow: 0 0 10px #ff00cc;
+}
+
+.mode-btn:hover:not(.active) {
+  background: rgba(0, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.mode-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Update confidence slider value color */
+.slider-value {
+  font-family: 'Orbitron', sans-serif;
+  color: #00ff88; /* Changed to green for 25% */
+  font-size: 22px;
+  font-weight: 700;
+  text-shadow: 0 0 15px #00ff88;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .mode-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .mode-btn {
+    width: 100%;
+  }
+}

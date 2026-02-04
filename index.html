@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VISION.AI - Neural Engine v2.0</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Orbitron for futuristic headings, Roboto Mono for tech text -->
+</head>
+<body>
+  <div class="header">
+    <div class="logo">
+      <span class="lightning">⚡</span> VISION.AI
+    </div>
+    <div class="status">
+      <span class="system">SYSTEM ONLINE</span>
+      <span class="dot">•</span>
+      <span class="latency">LATENCY: 20ms</span>
+    </div>
+  </div>
+
+  <div class="main-title">
+    <h1><span class="neon-pink">OBJECT</span> <span class="neon-blue">DETECTION</span></h1>
+  </div>
+
+  <div class="subtitle">
+    <p>Advanced computer vision analysis powered by YOLO neural networks.</p>
+    <p>Upload media to detect, classify, and track objects in real-time.</p>
+  </div>
+
+  <div class="controls">
+    <button id="hideOverlayBtn" class="btn neon-btn">HIDE OVERLAY</button>
+  </div>
+
+  <div class="content-grid">
+    <div class="panel original">
+      <h2>ORIGINAL SOURCE</h2>
+      <div class="image-container">
+        <img id="originalImg" src=""/>
+        <div id="rawInputLabel" class="label">RAW INPUT</div>
+      </div>
+    </div>
+
+    <div class="panel analysis">
+      <h2>AI ANALYSIS</h2>
+      <div class="image-container">
+        <canvas id="analyzedCanvas"></canvas>
+        <div id="aiAnalysisLabel" class="label">AI ANALYSIS</div>
+      </div>
+    </div>
+
+    <div class="sidebar">
+      <div class="recent-scans">
+        <h3>RECENT SCANS</h3>
+        <div id="recentList">
+          <!-- Recent thumbnails will be appended here via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="upload-section">
+    <label for="fileUpload" class="upload-label neon-btn">UPLOAD IMAGE</label>
+    <input type="file" id="fileUpload" accept="image/*" hidden />
+  </div>
+
+  <div class="summary">
+    <h2>DETECTION SUMMARY</h2>
+    <div id="summaryTags">
+      <!-- Tags like [2] AUTOS, [1] NUMBER_PLATE etc. will be added via JS -->
+    </div>
+  </div>
+
+  <!-- Fullscreen Modal for zoomed preview -->
+  <div id="previewModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">×</span>
+      <h2 class="modal-title">AI ANALYSIS - ZOOMED</h2>
+      <div class="modal-image-container">
+        <canvas id="modalCanvas"></canvas>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="controls">
+    <button id="hideOverlayBtn" class="btn neon-btn">HIDE OVERLAY</button>
+  </div>
+
+  <!-- Confidence Slider -->
+  <div class="confidence-slider">
+    <div class="slider-header">
+      <span class="slider-title">CONFIDENCE THRESHOLD</span>
+      <span id="confidenceValue" class="slider-value">25%</span>
+    </div>
+    <div class="slider-container">
+      <input type="range" id="confidenceSlider" min="0" max="100" value="25" class="slider">
+      <div class="slider-labels">
+        <span>0%</span>
+        <span>25%</span>
+        <span>50%</span>
+        <span>75%</span>
+        <span>100%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFERENCE MODE SELECTOR - YE ADD KARO -->
+  <div class="mode-selector">
+    <div class="mode-title">INFERENCE MODE</div>
+    <div class="mode-buttons">
+      <button class="mode-btn" data-mode="speed">SPEED</button>
+      <button class="mode-btn active" data-mode="balanced">BALANCED (25%)</button>
+      <button class="mode-btn" data-mode="accuracy">ACCURACY</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
