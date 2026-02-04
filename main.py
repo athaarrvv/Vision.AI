@@ -11,6 +11,11 @@ from typing import List, Dict
 import time
 import logging
 import torch
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi import Request
+import os
+
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -26,6 +31,13 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.mount(
+    "/",
+    StaticFiles(directory="frontend", html=True),
+    name="frontend"
+)
+
 
 # Load YOLO model with optimizations
 MODEL_PATH = "yolo26n.pt"
@@ -75,7 +87,7 @@ def get_class_color(class_name: str):
     """Get bright color for better visibility"""
     return CLASS_COLORS.get(class_name.lower(), (255, 255, 255))
 
-@app.get("/")
+@app.get("/health")
 async def root():
     return {
         "status": "online",
@@ -504,6 +516,3 @@ async def get_model_info():
         return info
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="info")
