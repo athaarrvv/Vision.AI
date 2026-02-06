@@ -24,9 +24,13 @@ let popOutQueue = [];
 let animating = false;
 let confidenceThreshold = 0.25;
 let currentMode = "balanced";
+let allDetections = [];
+let originalImage = new Image();
+
 
 // Initialize confidence slider
 confidenceSlider.addEventListener('input', (e) => {
+  sliderManuallyChanged = true;
   const value = parseInt(e.target.value);
   confidenceThreshold = value / 100;
   confidenceValue.textContent = `${value}%`;
@@ -40,10 +44,13 @@ confidenceSlider.addEventListener('input', (e) => {
   }
 });
 
+
 // Filter detections by confidence threshold
 function filterDetectionsByConfidence() {
+
   if (!currentDetections.length) {
     currentFilteredDetections = [];
+    redrawCanvas();
     updateSummaryTags([]);
     return;
   }
@@ -133,6 +140,17 @@ function drawDetections() {
   // Sort detections by confidence
   const sortedDetections = [...currentFilteredDetections].sort((a, b) => b[4] - a[4]);
   
+  let lineWidth = 4;
+
+  if (currentMode === "speed") {
+    lineWidth = 2;
+  } else if (currentMode === "accuracy") {
+    lineWidth = 6;
+  }
+
+  ctx.lineWidth = lineWidth;
+
+
   sortedDetections.forEach(det => {
     const [x1, y1, x2, y2, conf, className] = det;
     
@@ -150,7 +168,6 @@ function drawDetections() {
     
     // HIGH RESOLUTION BOX - THICKER LINES
     ctx.beginPath();
-    ctx.lineWidth = 4; // Increased from 3 to 4
     ctx.lineJoin = 'round';
     ctx.lineCap = 'round';
     ctx.strokeStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${opacity})`;
@@ -488,7 +505,7 @@ fileInput.addEventListener('change', async (e) => {
     `;
     analyzedCanvas.parentElement.appendChild(loading);
 
-    const response = await fetch(`/detect?mode=${currentMode}`, {
+    const response = await fetch(`/detect`, {
       method: 'POST',
       body: formData,
     });
@@ -506,10 +523,11 @@ fileInput.addEventListener('change', async (e) => {
     console.log(`Received ${currentDetections.length} detections in ${currentMode} mode`);
     
     filterDetectionsByConfidence();
-    
+    redrawCanvas(); 
+
     isOverlayVisible = true;
     hideOverlayBtn.textContent = 'HIDE OVERLAY';
-    animateBoxes(false);
+    // animateBoxes(false);
     
     addToRecent(data.annotated_image, currentDetections, file.name || 'image');
     
@@ -596,7 +614,7 @@ function addToRecent(annotatedBase64, detections, filename) {
       hideOverlayBtn.textContent = 'HIDE OVERLAY';
       hideOverlayBtn.disabled = false;
       
-      animateBoxes(false);
+      // animateBoxes(false);
     }
   });
 
@@ -638,7 +656,9 @@ window.addEventListener('load', () => {
 // Mode selection
 document.querySelectorAll('.mode-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    if (animating || !currentOriginalBase64) return;
+    sliderManuallyChanged = false;
+
+    if (!currentOriginalBase64) return;
     
     document.querySelectorAll('.mode-btn').forEach(b => {
       b.classList.remove('active');
@@ -648,71 +668,69 @@ document.querySelectorAll('.mode-btn').forEach(btn => {
     btn.classList.add('active');
     currentMode = btn.dataset.mode;
     
-    document.querySelectorAll('.mode-btn').forEach(b => {
-      b.disabled = true;
-    });
-    
     console.log(`Switched to ${currentMode} mode`);
-    
-    reRunDetectionWithMode();
+
+    filterDetectionsByConfidence();
+    redrawCanvas();
+
   });
 });
 
-// MODE CHANGE FUNCTION - FIXED VERSION
-async function reRunDetectionWithMode() {
-  if (!currentOriginalBase64) return;
+// // MODE CHANGE FUNCTION - FIXED VERSION
+// async function reRunDetectionWithMode() {
+//   if (!currentOriginalBase64) return;
   
-  summaryTags.innerHTML = '<div class="tag" style="border-color:#00ffff;color:#00ffff;">PROCESSING...</div>';
+//   summaryTags.innerHTML = '<div class="tag" style="border-color:#00ffff;color:#00ffff;">PROCESSING...</div>';
   
-  document.querySelectorAll('.mode-btn').forEach(btn => {
-    btn.disabled = true;
-  });
+//   document.querySelectorAll('.mode-btn').forEach(btn => {
+//     btn.disabled = true;
+//   });
   
-  try {
-    // Convert base64 to File object properly
-    const base64Response = await fetch(`data:image/jpeg;base64,${currentOriginalBase64}`);
-    const blob = await base64Response.blob();
-    const file = new File([blob], currentImageName || 'image.jpg', { type: 'image/jpeg' });
+//   try {
+//     // Convert base64 to File object properly
+//     const base64Response = await fetch(`data:image/jpeg;base64,${currentOriginalBase64}`);
+//     const blob = await base64Response.blob();
+//     const file = new File([blob], currentImageName || 'image.jpg', { type: 'image/jpeg' });
     
-    const formData = new FormData();
-    formData.append('file', file);
+//     const formData = new FormData();
+//     formData.append('file', file);
     
-    const response = await fetch(`/detect?mode=${currentMode}`, {
-      method: 'POST',
-      body: formData,
-    });
+//     const response = await fetch(`/detect?mode=${currentMode}`, {
+//       method: 'POST',
+//       body: formData,
+//     });
     
-    if (!response.ok) {
-      throw new Error(`Server error: ${response.status}`);
-    }
+//     if (!response.ok) {
+//       throw new Error(`Server error: ${response.status}`);
+//     }
     
-    const data = await response.json();
+//     const data = await response.json();
     
-    currentDetections = data.detections || [];
+//     currentDetections = data.detections || [];
     
-    filterDetectionsByConfidence();
+//     filterDetectionsByConfidence();
     
-    isOverlayVisible = true;
-    hideOverlayBtn.textContent = 'HIDE OVERLAY';
-    hideOverlayBtn.disabled = false;
+//     isOverlayVisible = true;
+//     hideOverlayBtn.textContent = 'HIDE OVERLAY';
+//     hideOverlayBtn.disabled = false;
     
-    if (animationFrameId) {
-      cancelAnimationFrame(animationFrameId);
-    }
+//     if (animationFrameId) {
+//       cancelAnimationFrame(animationFrameId);
+//     }
     
-    animateBoxes(false);
+//     animateBoxes(false);
     
-    console.log(`Mode ${currentMode}: ${currentDetections.length} detections`);
+//     console.log(`Mode ${currentMode}: ${currentDetections.length} detections`);
     
-  } catch (err) {
-    console.error('Mode change failed:', err);
-    alert('Mode change failed: ' + err.message);
-  } finally {
-    document.querySelectorAll('.mode-btn').forEach(btn => {
-      btn.disabled = false;
-    });
-  }
-}
+//   } catch (err) {
+//     console.error('Mode change failed:', err);
+//     alert('Mode change failed: ' + err.message);
+//   } finally {
+//     document.querySelectorAll('.mode-btn').forEach(btn => {
+//       btn.disabled = false;
+//     });
+//   }
+// }
 
 // Add HIGH RESOLUTION canvas settings
 analyzedCanvas.style.imageRendering = 'high-quality';

@@ -126,20 +126,22 @@ async def detect_objects(
         # Mode configurations
         if mode == "speed":
             imgsz = 640
-            conf = 0.001
-            iou = 0.5
-            max_det = 100
+            conf = 0.25
+            iou = 0.55      # thoda strict → clean output
+            max_det = 80
+
         elif mode == "accuracy":
-            imgsz = 1280
-            conf = 0.001
-            iou = 0.4
-            max_det = 300
+            imgsz = 768
+            conf = 0.15
+            iou = 0.35      # loose → more boxes
+            max_det = 150
+
         else:  # balanced
             imgsz = 640
-            conf = 0.001
-            iou = 0.45
-            max_det = 200
-        
+            conf = 0.20
+            iou = 0.45      # sweet spot
+            max_det = 120
+                    
         # Run inference
         results = model(
             img_rgb,
